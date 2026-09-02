@@ -127,42 +127,35 @@ for episode in range(num_episodes):
     state, info = env.reset()
     total_reward = 0
 
-    for step in range(max_steps_per_episode):
+    done = False
+
+    while not done:
 
         # Choose action using epsilon-greedy
-        action = epsilon_greedy_action(state, epsilon)
+        action = choose_action(state, epsilon)
 
         # Take action
         next_state, reward, terminated, truncated, info = env.step(action)
 
+        done = terminated or truncated
+
         # Q-Learning update
-        # Q(s,a) <- Q(s,a) + alpha [r + gamma * max Q(s',a') - Q(s,a)]
-        if terminated or truncated:
+        if done:
             target = reward
         else:
             target = reward + gamma * np.max(Q[next_state])
 
-        Q[state, action] += alpha * (
+        Q[state, action] = Q[state, action] + alpha * (
             target - Q[state, action]
         )
 
-        # Move to next state
         state = next_state
         total_reward += reward
 
-        # Stop episode if terminated
-        if terminated or truncated:
-            break
-
-    # Store total reward
     episode_rewards.append(total_reward)
 
     # Decay epsilon
-    epsilon = max(
-        epsilon_min,
-        epsilon * epsilon_decay
-    )
-
+    epsilon = max(epsilon_min, epsilon * epsilon_decay)
 
 # -------------------------------------------------
 # Extract State-Value Function and Policy
@@ -181,23 +174,23 @@ learned_policy = np.argmax(Q, axis=1)
 ## Output
 
 #### Final Q-table:
-<img width="748" height="652" alt="image" src="https://github.com/user-attachments/assets/f802180f-f1e1-481c-bd83-112436810abc" />
+<img width="463" height="422" alt="image" src="https://github.com/user-attachments/assets/9f57d928-f755-4f7e-847d-d262542e3e6f" />
 
 #### Estimated State-Value Function:
-<img width="662" height="165" alt="image" src="https://github.com/user-attachments/assets/b1c66da6-8463-4086-8b88-737356dfe2f8" />
+ <img width="881" height="152" alt="image" src="https://github.com/user-attachments/assets/31e92a96-330d-46d3-ba91-6f9e31ad57af" />
 
 
 #### Learned Policy:
-<img width="765" height="175" alt="image" src="https://github.com/user-attachments/assets/9d87059f-5b04-4e27-8f4d-1fc750365878" />
+<img width="765" height="143" alt="image" src="https://github.com/user-attachments/assets/fa9fe674-0480-4992-af72-b9f5a6fa5b44" />
 
 
 #### Average reward over last 1000 episodes: 
-<img width="706" height="45" alt="image" src="https://github.com/user-attachments/assets/7281c91d-55f3-4b2d-9188-c9858a69a86c" />
+<img width="695" height="35" alt="image" src="https://github.com/user-attachments/assets/aa61a375-a077-4b80-8b67-d9ab802d92f1" />
 
 
 
 #### Q-Learning Curve - FrozenLake:
-<img width="691" height="470" alt="image" src="https://github.com/user-attachments/assets/5cf17700-7f6b-4cc9-9389-3da52b7ef6d5" />
+<img width="691" height="470" alt="image" src="https://github.com/user-attachments/assets/2e1dfdb3-5412-4ffe-9f13-9d5e64653795" />
 
 
 
