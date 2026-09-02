@@ -177,7 +177,6 @@ learned_policy = np.argmax(Q, axis=1)
 
 
 ```
----
 
 ## Output
 
@@ -204,7 +203,7 @@ Q-Learning Curve - FrozenLake:
 
 
 
----
+
 
 ## Result
 Q-Learning successfully learned a policy for reaching the goal in FrozenLake while avoiding holes.
